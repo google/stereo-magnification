@@ -149,7 +149,7 @@ def get_inputs(padx, pady):
   image2 = load_image(FLAGS.image2, padx, pady, -FLAGS.xshift, -FLAGS.yshift)
 
   shape1_before_crop = tf.shape(image1)
-  shape2_before_crop = tf.shape(image1)
+  shape2_before_crop = tf.shape(image2)
   image1 = crop_to_multiple(image1, 16)
   image2 = crop_to_multiple(image2, 16)
   shape1_after_crop = tf.shape(image1)
