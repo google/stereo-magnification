@@ -175,7 +175,7 @@ class Loader(object):
 
     # Custom processing
     if map_function:
-      sequences_with_images = sequence_with_images.map(
+      sequences_with_images = sequences_with_images.map(
           map_function, num_parallel_calls=parallelism)
 
     # Batching. We discard batches that are smaller than the batch size,
