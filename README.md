@@ -68,3 +68,7 @@ between the images.
 
 Our pre-trained model can be downloaded into the 'models' subdirectory by
 running the script 'bash scripts/download_model.sh'.
+
+## RealEstate10K dataset
+
+We have released the [RealEstate10K dataset](https://google.github.io/realestate10k/) suitable for training and testing the MPI model. Note that due to data restrictions, this is not the same version used in our SIGGRAPH'18 paper. However, we are working on updating the results using this public version.
