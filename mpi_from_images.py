@@ -61,7 +61,7 @@ flags.DEFINE_string('test_outputs', 'rgba_layers,src_images',
 # Rendering images.
 flags.DEFINE_boolean('render', False,
                      'Render output images at multiples of input offset.')
-flags.DEFINE_list(
+flags.DEFINE_string(
     'render_multiples',
     '-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12',
     'Multiples of input offset to render outputs at.')
@@ -206,7 +206,8 @@ def main(_):
   # cropping into the original images.
   max_multiple = 0
   if FLAGS.render:
-    max_multiple = max(abs(float(m)) for m in FLAGS.render_multiples)
+    render_list = [float(x) for x in FLAGS.render_multiples.split(',')]
+    max_multiple = max(abs(float(m)) for m in render_list)
   pady = int(max_multiple * abs(FLAGS.yshift) + 8)
   padx = int(max_multiple * abs(FLAGS.xshift) + 8)
 
@@ -260,7 +261,7 @@ def main(_):
   renders = {}
   if FLAGS.render:
     print 'Rendering new views...'
-    for multiple in FLAGS.render_multiples:
+    for index, multiple in enumerate(render_list):
       m = float(multiple)
       print '    offset: %s' % multiple
       pose = build_matrix([[1.0, 0.0, 0.0, -m * FLAGS.xoffset],
@@ -275,7 +276,7 @@ def main(_):
       cropped = crop_to_size(unshifted, original_width, original_height)
 
       with tf.Session() as sess:
-        renders[multiple] = sess.run(cropped)
+        renders[multiple] = (index, sess.run(cropped))
 
   output_dir = FLAGS.output_dir
   if not tf.gfile.IsDirectory(output_dir):
@@ -284,8 +285,8 @@ def main(_):
   print 'Saving results to %s' % output_dir
 
   # Write results to disk.
-  for name, image in renders.items():
-    write_image(output_dir + '/render_%s.png' % name, image)
+  for name, (index, image) in renders.items():
+    write_image(output_dir + '/render_%02d_%s.png' % (index, name), image)
 
   if 'intrinsics' in FLAGS.test_outputs:
     with open(output_dir + '/intrinsics.txt', 'w') as fh:
