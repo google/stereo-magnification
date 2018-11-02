@@ -1,7 +1,7 @@
 # To generate an MPI and render sample output images for this example image
 # pair, run the following sample command:
 
-./mpi_from_images.py \
+python ./mpi_from_images.py \
   --image1=examples/twain/twain_left.jpg \
   --image2=examples/twain/twain_right.jpg \
   --output_dir=examples/twain/results \
