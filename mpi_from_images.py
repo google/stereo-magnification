@@ -50,7 +50,16 @@ flags.DEFINE_integer(
     'yshift', 0, 'Vertical pixel shift for image2 '
     '(i.e., difference in y-coordinate of principal point '
     'from image2 to image1).')
-
+flags.DEFINE_string('pose1', '',
+                    ('Camera pose for first image (if not identity).'
+                     ' Twelve space- or comma-separated floats, forming a 3x4'
+                     ' matrix in row-major order.'))
+flags.DEFINE_string('pose2', '',
+                    ('Pose for second image (if not identity).'
+                     ' Twelve space- or comma-separated floats, forming a 3x4'
+                     ' matrix in row-major order. If pose2 is specified, then'
+                     ' xoffset/yoffset/zoffset flags will be used for rendering'
+                     ' output views only.'))
 # Output flags
 flags.DEFINE_string('output_dir', '/tmp/', 'Directory to write MPI output.')
 flags.DEFINE_string('test_outputs', 'rgba_layers,src_images',
@@ -142,6 +151,18 @@ def load_image(f, padx, pady, xshift, yshift):
   return image
 
 
+def pose_from_flag(flag):
+  if flag:
+    values = [float(x) for x in flag.replace(',', ' ').split()]
+    assert len(values) == 12
+    return [values[0:4], values[4:8], values[8:12], [0.0, 0.0, 0.0, 1.0]]
+  else:
+    return [[1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0]]
+
+
 def get_inputs(padx, pady):
   """Get images, poses and intrinsics in required format."""
   inputs = {}
@@ -169,10 +190,15 @@ def get_inputs(padx, pady):
     image1 = image1[tf.newaxis, ...]
     image2 = image2[tf.newaxis, ...]
 
-  pose_one = tf.eye(4, batch_shape=[1])
-  pose_two = build_matrix(
-      [[1.0, 0.0, 0.0, -FLAGS.xoffset], [0.0, 1.0, 0.0, -FLAGS.yoffset],
-       [0.0, 0.0, 1.0, -FLAGS.zoffset], [0.0, 0.0, 0.0, 1.0]])[tf.newaxis, ...]
+  pose_one = pose_from_flag(FLAGS.pose1)
+  pose_two = pose_from_flag(FLAGS.pose2)
+  if not FLAGS.pose2:
+    pose_two[0][3] = -FLAGS.xoffset
+    pose_two[1][3] = -FLAGS.yoffset
+    pose_two[2][3] = -FLAGS.zoffset
+
+  pose_one = build_matrix(pose_one)[tf.newaxis, ...]
+  pose_two = build_matrix(pose_two)[tf.newaxis, ...]
 
   # Use pre-crop and pre-padding sizing when converting fx, fy. This way the
   # field of view gets modified by the cropping correctly.
