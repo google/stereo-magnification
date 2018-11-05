@@ -1,0 +1,12 @@
+# To generate an MPI and render sample output images for this example image
+# pair, run the following sample command:
+
+python ./mpi_from_images.py \
+  --image1=examples/bananas/bananas1.jpg \
+  --image2=examples/bananas/bananas2.jpg \
+  --pose1="0.999947548 -0.001357046 -0.010151989 0.359417914 0.001413203 0.999983728 0.005526535 -0.003794850 0.010144324 -0.005540592 0.999933183 0.124850837" \
+  --pose2="0.999962628 -0.002106981 -0.008386925 0.376296459 0.002151508 0.999983609 0.005303705 -0.001512435 0.008375612 -0.005321552 0.999950767 0.124671650" \
+  --xoffset=0.017 \
+  --output_dir=examples/bananas/results \
+  --render_multiples=-2,-1.5,-1,-0.5,0,0.5,1,1.5,2 \
+  --render

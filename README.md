@@ -64,7 +64,7 @@ To run a trained model on a single image pair to generate an MPI, use
 with a rectified stereo pair), but allows for specifying the (x, y, z) offset
 between the images. 
 
-You can find an example input stereo pair and command lines for generating results
+You can find example input stereo pairs and command lines for generating results
 in the `examples` directory.
 
 ## Reference examples and results
