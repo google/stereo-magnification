@@ -57,6 +57,11 @@ contains a ground-truth target image `tgt_image_*.png` and the synthesized image
 `output_image_*.png`. The script will output a text file summarizing the metrics
 inside the folder FLAGS.result_root.
 
+## Pre-trained models from SIGGRAPH'18 paper
+
+Our pre-trained model can be downloaded into the `models` subdirectory by
+running the script `bash scripts/download_model.sh`.
+
 ## Running the model on a single image pair
 
 To run a trained model on a single image pair to generate an MPI, use
@@ -67,14 +72,11 @@ between the images.
 You can find example input stereo pairs and command lines for generating results
 in the `examples` directory.
 
+(You must first download the pretrained model or train your own model and place in the `models/` subdirectory)
+
 ## Reference examples and results
 
 For reference, you can find additional example input stereo pairs, as well as corresponding output multi-plane images and view synthesis results used in the paper in this [Google drive link](https://drive.google.com/open?id=1CZGJxRl0GK0js0MbL7cn7tHtdRrtnjOB) (772 MB).
-
-## Pre-trained models from SIGGRAPH'18 paper
-
-Our pre-trained model can be downloaded into the `models` subdirectory by
-running the script `bash scripts/download_model.sh`.
 
 ## RealEstate10K dataset
 
